@@ -2,11 +2,13 @@
 #include <task.h>
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
+#include "usb/usb_task.h"
+#include "usb/tusb_config.h"
 
 #include "utils/printf_color.h"
 
 
-void task_blink(void *pvParams) {
+void task_blink(__unused void *pvParams) {
     bi_decl(bi_1pin_with_name(PICO_DEFAULT_LED_PIN, "On-board LED"));
 
     gpio_init(PICO_DEFAULT_LED_PIN);
@@ -22,33 +24,33 @@ void task_blink(void *pvParams) {
     }
 }
 
-void app_main(void *pvParams) {
-    xTaskCreate(task_blink,
-                "default_led",
-                configMINIMAL_STACK_SIZE * 4,
-                NULL,
-                1,
-                NULL
-    );
-
-    for (;;) {
-        vTaskDelay(pdMS_TO_TICKS(60 * 1000));
-    }
+void board_init() {
+    usbd_serial_init();
+    set_sys_clock_khz(configCPU_CLOCK_HZ / 1000, false);
+    stdio_init_all();
 }
 
 int main() {
     bi_decl(bi_program_description("ch32v003 debugger binary."));
 
-    set_sys_clock_khz(configCPU_CLOCK_HZ / 1000, false);
+    board_init();
 
-    stdio_init_all();
+    xTaskCreate(
+            vTaskUsb,
+            "usb",
+            configMINIMAL_STACK_SIZE,
+            NULL,
+            1,
+            NULL
+    );
 
-    xTaskCreate(app_main,
-                "app_main",
-                configMINIMAL_STACK_SIZE,
-                NULL,
-                1,
-                NULL
+    xTaskCreate(
+            task_blink,
+            "default_led",
+            configMINIMAL_STACK_SIZE * 4,
+            NULL,
+            1,
+            NULL
     );
 
     vTaskStartScheduler();

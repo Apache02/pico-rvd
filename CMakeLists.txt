@@ -18,16 +18,25 @@ add_executable(
         pico_rvd
         src/main.cpp
         src/utils/printf_color.cpp
+        src/usb/usb_descriptors.c
+        src/usb/usb_task.cpp
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/config)
+include_directories(
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/config
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/usb
+)
 
 pico_enable_stdio_usb(pico_rvd 1)
 pico_enable_stdio_uart(pico_rvd 0)
 
 target_link_libraries(
-        pico_rvd PRIVATE
+        pico_rvd
         pico_stdlib
+        pico_stdio_usb
+        pico_bootsel_via_double_reset
+        hardware_flash
+        tinyusb_device
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap4
 )
