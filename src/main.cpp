@@ -2,10 +2,10 @@
 #include <task.h>
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
+
 #include "usb/usb_task.h"
 #include "usb/tusb_config.h"
-
-#include "utils/printf_color.h"
+#include "console/console_task.h"
 
 
 void task_blink(__unused void *pvParams) {
@@ -19,8 +19,6 @@ void task_blink(__unused void *pvParams) {
         vTaskDelay(pdMS_TO_TICKS(300));
         gpio_put(PICO_DEFAULT_LED_PIN, 0);
         vTaskDelay(pdMS_TO_TICKS(700));
-
-        printf_color(COLOR_WHITE, "i = %d\n", i);
     }
 }
 
@@ -50,6 +48,15 @@ int main() {
             configMINIMAL_STACK_SIZE * 4,
             NULL,
             1,
+            NULL
+    );
+
+    xTaskCreate(
+            vTaskConsole,
+            "console",
+            configMINIMAL_STACK_SIZE * 4,
+            NULL,
+            2,
             NULL
     );
 

@@ -17,9 +17,12 @@ pico_sdk_init()
 add_executable(
         pico_rvd
         src/main.cpp
-        src/utils/printf_color.cpp
         src/usb/usb_descriptors.c
         src/usb/usb_task.cpp
+        src/console/console_task.cpp
+        src/console/Console.cpp
+        src/console/Packet.cpp
+        src/console/utils.cpp
 )
 
 include_directories(
@@ -28,7 +31,7 @@ include_directories(
 )
 
 pico_enable_stdio_usb(pico_rvd 1)
-pico_enable_stdio_uart(pico_rvd 0)
+pico_enable_stdio_uart(pico_rvd 1)
 
 target_link_libraries(
         pico_rvd
