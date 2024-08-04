@@ -1,4 +1,5 @@
 #include "Console.h"
+#include "Application.h"
 
 #include "utils.h"
 #include "commands/commands.h"
@@ -10,13 +11,7 @@
 
 Console::Console() {}
 
-Console::Console(RVDebug *rvd) {
-    this->rvd = rvd;
-}
-
-Console::~Console() {
-    this->rvd = nullptr;
-}
+Console::~Console() {}
 
 void Console::reset() {}
 
@@ -30,13 +25,13 @@ void Console::start() {
 
 struct ConsoleHandler {
     const char *name;
-    std::function<void(Console &)> handler;
+    std::function<void(Application &, Console &)> handler;
 };
 
 ConsoleHandler handlers[] = {
         {
                 "help",
-                [](Console &c) {
+                [](Application &app, Console &c) {
                     c.print_help();
                 }
         },
@@ -91,7 +86,7 @@ bool Console::dispatch_command() {
     for (int i = 0; i < handler_count; i++) {
         auto &h = handlers[i];
         if (packet.match_word(h.name)) {
-            h.handler(*this);
+            h.handler(*gApp, *this);
             return true;
         }
     }

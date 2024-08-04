@@ -8,8 +8,11 @@
 #include "usb/tusb_config.h"
 #include "console/console_task.h"
 
+#include "Application.h"
+
 
 #ifdef PICO_DEFAULT_LED_PIN
+
 void task_blink(__unused void *pvParams) {
     bi_decl(bi_1pin_with_name(PICO_DEFAULT_LED_PIN, "On-board LED"));
 
@@ -22,6 +25,7 @@ void task_blink(__unused void *pvParams) {
         vTaskDelay(10);
     }
 }
+
 #endif
 
 void board_init() {
@@ -30,10 +34,16 @@ void board_init() {
     stdio_init_all();
 }
 
+void application_init() {
+    gApp = new Application();
+    gApp->init();
+}
+
 int main() {
     bi_decl(bi_program_description("ch32v003 debugger binary."));
 
     board_init();
+    application_init();
 
     xTaskCreate(
             vTaskUsb,

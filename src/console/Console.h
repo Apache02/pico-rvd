@@ -1,11 +1,8 @@
 #pragma once
 
 #include "Packet.h"
-#include "RVDebug.h"
 
 struct Console {
-    Console(RVDebug *rvd);
-
     Console();
 
     ~Console();
@@ -23,6 +20,4 @@ struct Console {
     bool dispatch_command();
 
     Packet packet;
-
-    RVDebug *rvd = nullptr;
 };

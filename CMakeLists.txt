@@ -22,25 +22,31 @@ file(
 add_executable(
         pico_rvd
         src/main.cpp
+        src/application/Application.cpp
 
         src/usb/usb_descriptors.c
         src/usb/usb_task.cpp
 
         src/utils/utils.cpp
+        src/utils/Packet.cpp
 
         src/console/console_task.cpp
         src/console/Console.cpp
-        src/console/Packet.cpp
         ${SOURCES_CONSOLE_COMMANDS}
 
-        src/chip_tools/RVDebug.cpp
         src/chip_tools/PicoSWIO.cpp
+        src/chip_tools/RVDebug.cpp
+        src/chip_tools/SoftBreak.cpp
+        src/chip_tools/WCHFlash.cpp
+        src/chip_tools/GDBServer.cpp
 )
 
 pico_generate_pio_header(pico_rvd ${CMAKE_CURRENT_LIST_DIR}/src/chip_tools/singlewire.pio)
 
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/src/config
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/application
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/console
         ${CMAKE_CURRENT_SOURCE_DIR}/src/usb
         ${CMAKE_CURRENT_SOURCE_DIR}/src/utils
         ${CMAKE_CURRENT_SOURCE_DIR}/src/chip_tools

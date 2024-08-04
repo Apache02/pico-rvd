@@ -1,19 +1,20 @@
 #pragma once
 
-#include "../Console.h"
+#include "Console.h"
+#include "Application.h"
 
-void command_clocks(Console &c);
+void command_clocks(Application & app, Console &c);
 
-void command_dump(Console &c);
+void command_dump(Application & app, Console &c);
 
-void command_dump2(Console &c);
+void command_dump2(Application & app, Console &c);
 
-void command_reset(Console &c);
+void command_reset(Application & app, Console &c);
 
-void command_halt(Console &c);
+void command_halt(Application & app, Console &c);
 
-void command_resume(Console &c);
+void command_resume(Application & app, Console &c);
 
-void command_step(Console &c);
+void command_step(Application & app, Console &c);
 
-void command_status(Console &c);
+void command_status(Application & app, Console &c);

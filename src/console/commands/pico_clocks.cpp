@@ -30,7 +30,7 @@ static void sprint_human_hz(char *buf, uint32_t hz) {
     }
 }
 
-void command_clocks(Console &c) {
+void command_clocks(Application &app, Console &c) {
     char freq_human[32];
 
     sprint_human_hz(freq_human, configCPU_CLOCK_HZ);
