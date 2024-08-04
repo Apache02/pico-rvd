@@ -1,6 +1,7 @@
 #include "Console.h"
 
 #include "utils.h"
+#include "commands/commands.h"
 
 #include <functional>
 #include "pico/stdlib.h"
@@ -40,30 +41,32 @@ ConsoleHandler handlers[] = {
                 }
         },
         {
+                "pico_clocks",
+                command_clocks
+        },
+        {
+                "reset",
+                command_reset
+        },
+        {
+                "halt",
+                command_halt
+        },
+        {
+                "resume",
+                command_resume
+        },
+        {
+                "step",
+                command_step
+        },
+        {
                 "dump",
-                [](Console &c) {
-                    if (!c.rvd) {
-                        printf_r("rvd is null\n");
-                        return;
-                    }
-
-                    auto addr = c.packet.take_int().ok_or(0x08000000);
-                    printf("addr 0x%08x\n", addr);
-
-                    if (addr & 3) {
-                        printf("dump - bad addr 0x%08x\n", addr);
-                    } else {
-                        uint32_t buf[24 * 8];
-                        c.rvd->get_block_aligned(addr, buf, 24 * 8 * 4);
-                        for (int y = 0; y < 24; y++) {
-                            for (int x = 0; x < 8; x++) {
-                                printf("0x%08x ", buf[x + 8 * y]);
-                            }
-                            printf("\n");
-                        }
-                    }
-
-                }
+                command_dump
+        },
+        {
+                "status",
+                command_status
         },
 };
 

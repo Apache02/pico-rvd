@@ -14,15 +14,25 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 pico_sdk_init()
 
+file(
+        GLOB SOURCES_CONSOLE_COMMANDS
+        src/console/commands/*.cpp
+)
+
 add_executable(
         pico_rvd
         src/main.cpp
+
         src/usb/usb_descriptors.c
         src/usb/usb_task.cpp
+
+        src/utils/utils.cpp
+
         src/console/console_task.cpp
         src/console/Console.cpp
         src/console/Packet.cpp
-        src/utils/utils.cpp
+        ${SOURCES_CONSOLE_COMMANDS}
+
         src/chip_tools/RVDebug.cpp
         src/chip_tools/PicoSWIO.cpp
 )
