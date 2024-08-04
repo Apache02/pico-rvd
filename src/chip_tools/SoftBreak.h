@@ -6,6 +6,7 @@
 // the patch/unpatch, step to the breakpoint, and just leave the CPU halted.
 
 #pragma once
+
 #include <stdint.h>
 #include "utils.h"
 #include "RVDebug.h"
@@ -14,43 +15,54 @@
 //------------------------------------------------------------------------------
 
 struct SoftBreak {
-  SoftBreak(RVDebug* rvd, WCHFlash* flash);
-  void init();
-  void dump();
+    SoftBreak(RVDebug *rvd, WCHFlash *flash);
 
-  void halt();
-  bool resume();
-  void reset();
-  void step();
-  bool is_halted();
+    void init();
 
-  void set_dpc(uint32_t pc);
+    void dump();
 
-  int  set_breakpoint(uint32_t addr, int size);
-  int  clear_breakpoint(uint32_t addr, int size);
-  void clear_all_breakpoints();
-  bool has_breakpoint(uint32_t addr);
-  void patch_flash();
-  void unpatch_flash();
+    void halt();
 
-  //----------------------------------------
+    bool resume();
+
+    void reset();
+
+    void step();
+
+    bool is_halted();
+
+    void set_dpc(uint32_t pc);
+
+    int set_breakpoint(uint32_t addr, int size);
+
+    int clear_breakpoint(uint32_t addr, int size);
+
+    void clear_all_breakpoints();
+
+    bool has_breakpoint(uint32_t addr);
+
+    void patch_flash();
+
+    void unpatch_flash();
+
+    //----------------------------------------
 
 private:
 
-  RVDebug* rvd;
-  WCHFlash* flash;
+    RVDebug *rvd;
+    WCHFlash *flash;
 
-  bool halted;
+    bool halted;
 
-  int breakpoint_count;
-  uint32_t* breakpoints;
+    int breakpoint_count;
+    uint32_t *breakpoints;
 
-  uint8_t*  flash_clean; // Buffer for cached flash contents.
-  uint8_t*  flash_dirty; // Buffer for cached flash contents w/ breakpoints inserted
+    uint8_t *flash_clean; // Buffer for cached flash contents.
+    uint8_t *flash_dirty; // Buffer for cached flash contents w/ breakpoints inserted
 
-  uint8_t*  break_map; // Number of breakpoints set, per page
-  uint8_t*  flash_map; // Number of breakpoints written to device flash, per page.
-  uint8_t*  dirty_map; // Nonzero if the flash page does not match our flash_dirty copy.
+    uint8_t *break_map; // Number of breakpoints set, per page
+    uint8_t *flash_map; // Number of breakpoints written to device flash, per page.
+    uint8_t *dirty_map; // Nonzero if the flash page does not match our flash_dirty copy.
 };
 
 //------------------------------------------------------------------------------

@@ -168,7 +168,7 @@ struct Packet {
 
     //----------------------------------------
 
-    typedef Result <uint32_t, ParseError> Res;
+    typedef Result<uint32_t, ParseError> Res;
 
     Res take_hex2() {
         auto old_error = error;
