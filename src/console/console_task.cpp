@@ -3,11 +3,22 @@
 #include <FreeRTOS.h>
 #include <task.h>
 #include "tusb.h"
+#include "RVDebug.h"
+#include "PicoSWIO.h"
 
 void vTaskConsole(__unused void *pvParams) {
-    Console *console = new Console();
-
     vTaskDelay(pdMS_TO_TICKS(1000));
+
+    printf_g("// Starting PicoSWIO\n");
+    PicoSWIO *swio = new PicoSWIO();
+    swio->reset(5);
+
+    printf_g("// Starting RVDebug\n");
+    RVDebug *rvd = new RVDebug(swio, 16);
+    rvd->init();
+
+    printf_g("// Starting Console\n");
+    Console *console = new Console(rvd);
 
     console->reset();
     console->start();
@@ -20,4 +31,6 @@ void vTaskConsole(__unused void *pvParams) {
 
         vTaskDelay(1);
     }
+
+    delete console;
 }

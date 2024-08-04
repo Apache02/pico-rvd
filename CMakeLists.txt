@@ -22,12 +22,18 @@ add_executable(
         src/console/console_task.cpp
         src/console/Console.cpp
         src/console/Packet.cpp
-        src/console/utils.cpp
+        src/utils/utils.cpp
+        src/chip_tools/RVDebug.cpp
+        src/chip_tools/PicoSWIO.cpp
 )
+
+pico_generate_pio_header(pico_rvd ${CMAKE_CURRENT_LIST_DIR}/src/chip_tools/singlewire.pio)
 
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/src/config
         ${CMAKE_CURRENT_SOURCE_DIR}/src/usb
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/utils
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/chip_tools
 )
 
 pico_enable_stdio_usb(pico_rvd 1)
@@ -39,6 +45,7 @@ target_link_libraries(
         pico_stdio_usb
         pico_bootsel_via_double_reset
         hardware_flash
+        hardware_pio
         tinyusb_device
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap4

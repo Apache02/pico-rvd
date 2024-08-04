@@ -7,11 +7,19 @@
 
 //------------------------------------------------------------------------------
 
-void Console::reset() {
+Console::Console() {}
+
+Console::Console(RVDebug *rvd) {
+    this->rvd = rvd;
 }
 
-void Console::dump() {
+Console::~Console() {
+    this->rvd = nullptr;
 }
+
+void Console::reset() {}
+
+void Console::dump() {}
 
 void Console::start() {
     printf_y("\n>> ");
@@ -29,6 +37,32 @@ ConsoleHandler handlers[] = {
                 "help",
                 [](Console &c) {
                     c.print_help();
+                }
+        },
+        {
+                "dump",
+                [](Console &c) {
+                    if (!c.rvd) {
+                        printf_r("rvd is null\n");
+                        return;
+                    }
+
+                    auto addr = c.packet.take_int().ok_or(0x08000000);
+                    printf("addr 0x%08x\n", addr);
+
+                    if (addr & 3) {
+                        printf("dump - bad addr 0x%08x\n", addr);
+                    } else {
+                        uint32_t buf[24 * 8];
+                        c.rvd->get_block_aligned(addr, buf, 24 * 8 * 4);
+                        for (int y = 0; y < 24; y++) {
+                            for (int x = 0; x < 8; x++) {
+                                printf("0x%08x ", buf[x + 8 * y]);
+                            }
+                            printf("\n");
+                        }
+                    }
+
                 }
         },
 };
