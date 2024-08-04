@@ -6,6 +6,8 @@ void command_clocks(Console &c);
 
 void command_dump(Console &c);
 
+void command_dump2(Console &c);
+
 void command_reset(Console &c);
 
 void command_halt(Console &c);

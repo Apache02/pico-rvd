@@ -65,6 +65,10 @@ ConsoleHandler handlers[] = {
                 command_dump
         },
         {
+                "dump2",
+                command_dump2
+        },
+        {
                 "status",
                 command_status
         },
