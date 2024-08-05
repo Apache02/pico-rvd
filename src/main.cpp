@@ -6,14 +6,16 @@
 
 #include "usb/usb_task.h"
 #include "usb/tusb_config.h"
+#include "usb/usb_itf.h"
 #include "console/console_task.h"
+#include "gdb/gdb_task.h"
 
 #include "Application.h"
 
 
 #ifdef PICO_DEFAULT_LED_PIN
 
-void task_blink(__unused void *pvParams) {
+void vTaskStatusLed(__unused void *pvParams) {
     bi_decl(bi_1pin_with_name(PICO_DEFAULT_LED_PIN, "On-board LED"));
 
     gpio_init(PICO_DEFAULT_LED_PIN);
@@ -21,7 +23,7 @@ void task_blink(__unused void *pvParams) {
     gpio_put(PICO_DEFAULT_LED_PIN, 0);
 
     for (;;) {
-        gpio_put(PICO_DEFAULT_LED_PIN, tud_cdc_n_connected(0));
+        gpio_put(PICO_DEFAULT_LED_PIN, tud_cdc_n_connected(ITF_GDB));
         vTaskDelay(10);
     }
 }
@@ -50,7 +52,7 @@ int main() {
             "usb",
             configMINIMAL_STACK_SIZE,
             NULL,
-            1,
+            3,
             NULL
     );
 
@@ -63,10 +65,19 @@ int main() {
             NULL
     );
 
+    xTaskCreate(
+            vTaskGdb,
+            "gdb",
+            configMINIMAL_STACK_SIZE * 4,
+            NULL,
+            2,
+            NULL
+    );
+
 #ifdef PICO_DEFAULT_LED_PIN
     xTaskCreate(
-            task_blink,
-            "default_led",
+            vTaskStatusLed,
+            "status_led",
             configMINIMAL_STACK_SIZE,
             NULL,
             1,

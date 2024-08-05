@@ -34,6 +34,8 @@ add_executable(
         src/console/Console.cpp
         ${SOURCES_CONSOLE_COMMANDS}
 
+        src/gdb/gdb_task.cpp
+
         src/chip_tools/PicoSWIO.cpp
         src/chip_tools/RVDebug.cpp
         src/chip_tools/SoftBreak.cpp
