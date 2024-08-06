@@ -67,6 +67,10 @@ ConsoleHandler handlers[] = {
                 "status",
                 command_status
         },
+        {
+                "wipe_chip",
+                command_wipe
+        },
 };
 
 static const int handler_count = sizeof(handlers) / sizeof(handlers[0]);

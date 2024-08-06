@@ -18,3 +18,6 @@ void command_resume(Application &app, Console &c);
 void command_step(Application &app, Console &c);
 
 void command_status(Application &app, Console &c);
+
+void command_wipe(Application &app, Console &c);
+
