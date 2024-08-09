@@ -1,4 +1,5 @@
 #include "commands.h"
+#include "pico/time.h"
 
 #ifndef DUMP_DEFAULT_ADDRESS
 #define DUMP_DEFAULT_ADDRESS     (0x08000000)
@@ -136,3 +137,74 @@ void command_status(Application &app, Console &c) {
 
     app.rvd->dump();
 }
+
+void command_init_swio(Application &app, Console &c) {
+    if (!check(app)) return;
+
+    app.swio->reset();
+}
+
+void command_part_id(Application &app, Console &c) {
+    if (!check(app)) return;
+
+    uint32_t part_id = app.swio->get_partid();
+    printf_g("DM_PARTID = 0x%08X\n", part_id);
+}
+
+// When swio pin stay HIGH or LOW all reads returns only 1 or 0
+// part_id should be not 0xffffffff of 0x00000000, so we can use it to identify when swio is actually in debug mode
+static bool check_part_id(Application &app) {
+    uint32_t part_id = app.swio->get_partid();
+    if (part_id == 0 || part_id == 0xffffffff) {
+        return false;
+    }
+
+    // In theory it's possible to found moment when pin switching and part_id looks like 0xFFFF0000
+    // so double check part id for sure
+    return part_id == app.swio->get_partid();
+}
+
+void command_halt_on_reset(Application &app, Console &c) {
+    if (!check(app)) return;
+
+    printf("Trying enter debug mode in normal way... ");
+    app.rvd->halt();
+    if (!check_part_id(app)) {
+        app.swio->reset();
+        app.rvd->halt();
+    }
+
+    if (check_part_id(app)) {
+        printf_g("success\n");
+        return;
+    }
+
+    printf_r("fail\n");
+
+    printf_w("\nPlease toggle chips VCC pin in next 10 seconds...\n");
+    auto start_time = get_absolute_time();
+    static const char progress_array[] = {'-', '\\', '|', '/'};
+    printf(" ");
+
+    for (int i = 0;;) {
+        printf("\b%c", progress_array[i]);
+        if (++i >= count_of(progress_array)) i = 0;
+
+        app.swio->reset();
+        app.rvd->halt();
+
+        if (check_part_id(app)) {
+            sleep_us(1000);
+            if (check_part_id(app)) {
+                printf_g("\bSuccessfully halted\n");
+                break;
+            }
+        }
+
+        if (absolute_time_diff_us(start_time, get_absolute_time()) > 10'000'000) {
+            printf_r("\bHalt failed\n");
+            break;
+        }
+    }
+}
+

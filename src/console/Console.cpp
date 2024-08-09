@@ -40,6 +40,10 @@ ConsoleHandler handlers[] = {
                 command_clocks
         },
         {
+                "init_swio",
+                command_init_swio
+        },
+        {
                 "reset",
                 command_reset
         },
@@ -68,8 +72,16 @@ ConsoleHandler handlers[] = {
                 command_status
         },
         {
+                "part_id",
+                command_part_id
+        },
+        {
                 "wipe_chip",
                 command_wipe
+        },
+        {
+                "halt_on_reset",
+                command_halt_on_reset
         },
 };
 

@@ -19,7 +19,7 @@ static const int WCH_DM_PART = 0x7F; // not in doc but appears to be part info
 
 //------------------------------------------------------------------------------
 
-void PicoSWIO::reset(int pin) {
+void PicoSWIO::init(int pin) {
     CHECK(pin != -1);
     this->pin = pin;
 
@@ -53,7 +53,9 @@ void PicoSWIO::reset(int pin) {
     pio_sm_init(pio0, pio_sm, pio_offset, &c);
     pio_sm_set_pins(pio0, pio_sm, 0);
     pio_sm_set_enabled(pio0, pio_sm, true);
+}
 
+void PicoSWIO::reset() {
     // Grab pin and send an 8 usec low pulse to reset debug module
     // If we use the sdk functions to do this we get jitter :/
     sio_hw->gpio_clr = (1 << pin);

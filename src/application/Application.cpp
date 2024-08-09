@@ -7,7 +7,8 @@ void Application::init() {
 
     printf_g("// Starting PicoSWIO\n");
     swio = new PicoSWIO();
-    swio->reset(5);
+    swio->init(5); // pin on pico connected to swio pin on ch32
+    swio->reset();
 
     printf_g("// Starting RVDebug\n");
     rvd = new RVDebug(swio, 16);

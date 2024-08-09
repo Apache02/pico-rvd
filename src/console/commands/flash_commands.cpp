@@ -16,5 +16,7 @@ static inline bool check(Application &app) {
 }
 
 void command_wipe(Application &app, Console &c) {
+    if (!check(app)) return;
+
     app.flash->wipe_chip();
 }

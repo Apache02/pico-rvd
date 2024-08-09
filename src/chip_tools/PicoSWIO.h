@@ -13,7 +13,9 @@ struct Reg_SHDWCFGR;
 //------------------------------------------------------------------------------
 
 struct PicoSWIO : public Bus {
-    void reset(int swd_pin);
+    void init(int swd_pin);
+
+    void reset();
 
     uint32_t get(uint32_t addr) override;
 
