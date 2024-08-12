@@ -4,4 +4,8 @@ add_custom_target(
         COMMAND make flash
 )
 
-
+add_custom_target(
+        example_ws2812_circle---flash
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ws2812_circle
+        COMMAND make flash
+)

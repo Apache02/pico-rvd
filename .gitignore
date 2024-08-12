@@ -5,4 +5,4 @@ cmake-build-release
 .idea
 .vscode
 
-examples/blink/*.elf
+examples/**/*.elf
