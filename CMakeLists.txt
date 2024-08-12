@@ -71,3 +71,5 @@ target_link_libraries(
 
 pico_add_extra_outputs(pico_rvd)
 add_deploy_target(pico_rvd "${CMAKE_CURRENT_BINARY_DIR}/pico_rvd.uf2")
+
+add_subdirectory(examples)
