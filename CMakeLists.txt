@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
 set(PICO_BOARD yd_rp2040)
 
 list(APPEND PICO_BOARD_HEADER_DIRS ${CMAKE_CURRENT_LIST_DIR}/src/boards)
@@ -10,8 +13,6 @@ include(FreeRTOS_Kernel_import.cmake)
 
 project(pico_rvd C CXX ASM)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
 pico_sdk_init()
 
 file(
@@ -64,6 +65,7 @@ target_link_libraries(
         pico_bootsel_via_double_reset
         hardware_flash
         hardware_pio
+        hardware_clocks
         tinyusb_device
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap4

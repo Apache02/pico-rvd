@@ -2,6 +2,7 @@
 #include <task.h>
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
+#include "hardware/clocks.h"
 #include "tusb.h"
 
 #include "usb/usb_task.h"

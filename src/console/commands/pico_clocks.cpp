@@ -5,7 +5,7 @@
 
 
 static const struct {
-    const enum clock_index index;
+    const clock_num_t index;
     const char *const description;
 } clocks[] = {
         {clk_gpout0, "clk_gpout0 < GPIO Muxing 0"},
