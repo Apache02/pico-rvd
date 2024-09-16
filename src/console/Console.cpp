@@ -76,6 +76,10 @@ ConsoleHandler handlers[] = {
                 command_part_id
         },
         {
+                "chip_id",
+                command_chip_id
+        },
+        {
                 "wipe_chip",
                 command_wipe
         },

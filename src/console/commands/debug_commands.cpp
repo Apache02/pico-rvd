@@ -208,3 +208,48 @@ void command_halt_on_reset(Application &app, Console &c) {
     }
 }
 
+void command_chip_id(Application &app, Console &c) {
+    if (!check(app)) return;
+
+    static const struct {
+        uint32_t part_id;
+        const char *name;
+    } part_id_map[] = {
+            {0x00300500, "CH32V003F4P6"},
+            {0x00310500, "CH32V003F4U6"},
+            {0x00320500, "CH32V003A4M6"},
+            {0x00330500, "CH32V003J4M6"},
+    };
+
+    struct {
+        uint32_t unk_01;
+        uint32_t part_id;
+        uint32_t unk_02;
+        uint32_t unk_03;
+        uint32_t unk_04;
+        uint32_t unk_05;
+        uint32_t unk_06;
+        uint32_t unk_07;
+        uint16_t R16_ESIG_FLACAP;
+        uint16_t pad_01;
+        uint32_t pad_02;
+        uint32_t R32_ESIG_UNIID1;
+        uint32_t R32_ESIG_UNIID2;
+        uint32_t R32_ESIG_UNIID3;
+    } buf;
+
+    app.rvd->get_block_aligned(0x1FFFF7C0, &buf, sizeof(buf));
+
+    const char *part_id_name = "Unknown";
+    auto part_id_fact = buf.part_id & 0xFFFFFF0F;
+    for (auto[part_id_cmp, name]: part_id_map) {
+        if (part_id_fact == part_id_cmp) {
+            part_id_name = name;
+        }
+    }
+
+    printf("Chip: " "\u001b[%sm" "%s" "\u001b[0m" "\n", "1;37", part_id_name);
+    printf("Part ID: %08lX\n", buf.part_id);
+    printf("Flash Capacity: %d Kb\n", buf.R16_ESIG_FLACAP);
+    printf("Unique ID: %08lX%08lX%08lX\n", buf.R32_ESIG_UNIID1, buf.R32_ESIG_UNIID2, buf.R32_ESIG_UNIID3);
+}

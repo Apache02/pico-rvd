@@ -26,3 +26,5 @@ void command_init_swio(Application &app, Console &c);
 void command_part_id(Application &app, Console &c);
 
 void command_halt_on_reset(Application &app, Console &c);
+
+void command_chip_id(Application &app, Console &c);
