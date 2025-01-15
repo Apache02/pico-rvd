@@ -7,7 +7,7 @@ Turn your RP2040 into ch32v003 flasher/debugger. Based on project aappleby/picor
 * `PICO_SDK_PATH` environment variable
 * FreeRTOS Kernel
 ```shell
-git clone -b smp https://github.com/FreeRTOS/FreeRTOS-Kernel --recurse-submodules
+git clone https://github.com/FreeRTOS/FreeRTOS-Kernel --recurse-submodules
 ```
 * `FREERTOS_KERNEL_PATH` environment variable (optional)
 
