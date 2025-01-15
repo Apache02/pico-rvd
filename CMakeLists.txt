@@ -15,9 +15,11 @@ project(pico_rvd C CXX ASM)
 
 pico_sdk_init()
 
+add_subdirectory(src/shell)
+
 file(
-        GLOB SOURCES_CONSOLE_COMMANDS
-        src/console/commands/*.cpp
+        GLOB SOURCES_SHELL_COMMANDS
+        src/shell_commands/*.cpp
 )
 
 add_executable(
@@ -26,22 +28,20 @@ add_executable(
         src/application/Application.cpp
 
         src/usb/usb_descriptors.c
+
         src/usb/usb_task.cpp
-
-        src/utils/utils.cpp
-        src/utils/Packet.cpp
-
-        src/console/console_task.cpp
-        src/console/Console.cpp
-        ${SOURCES_CONSOLE_COMMANDS}
-
         src/gdb/gdb_task.cpp
+        src/shell_task.cpp
+
+        ${SOURCES_SHELL_COMMANDS}
 
         src/chip_tools/PicoSWIO.cpp
         src/chip_tools/RVDebug.cpp
         src/chip_tools/SoftBreak.cpp
         src/chip_tools/WCHFlash.cpp
         src/chip_tools/GDBServer.cpp
+        src/chip_tools/utils.cpp
+        src/chip_tools/Packet2.cpp
 )
 
 pico_generate_pio_header(pico_rvd ${CMAKE_CURRENT_LIST_DIR}/src/chip_tools/singlewire.pio)
@@ -49,9 +49,7 @@ pico_generate_pio_header(pico_rvd ${CMAKE_CURRENT_LIST_DIR}/src/chip_tools/singl
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/src/config
         ${CMAKE_CURRENT_SOURCE_DIR}/src/application
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/console
         ${CMAKE_CURRENT_SOURCE_DIR}/src/usb
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/utils
         ${CMAKE_CURRENT_SOURCE_DIR}/src/chip_tools
 )
 
@@ -60,6 +58,7 @@ pico_enable_stdio_uart(pico_rvd 1)
 
 target_link_libraries(
         pico_rvd
+        shell
         pico_stdlib
         pico_stdio_usb
         pico_bootsel_via_double_reset

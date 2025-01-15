@@ -51,16 +51,6 @@ int from_hex(char c);
 
 int cmp(const char *prefix, const char *text);
 
-int _atoi(const char *cursor);
-
-bool atoi2(const char *cursor, int &out);
-
-void vprint_to(putter p, const char *fmt, va_list args);
-
-void print_to(putter p, const char *fmt, ...);
-
-char *atox(char *cursor, int &out);
-
 //#define CHECK(A, args...) if(!(A)) { printf_r("ASSERT FAIL %s %d\n", __FILE__, __LINE__); printf_r("" args); printf_r("\n"); while (1); }
 
 #define CHECK(A, args...)
@@ -93,16 +83,16 @@ bool bit(T &t, int i) {
 }
 
 template<typename R, typename E>
-struct Result {
+struct Result2 {
 
-    Result(E e) {
+    Result2(E e) {
         //printf("result error\n");
         this->err = true;
         this->r = R();
         this->e = e;
     }
 
-    Result(R r) {
+    Result2(R r) {
         //printf("result ok %d\n", r);
         this->err = false;
         this->r = r;
@@ -127,16 +117,16 @@ struct Result {
         return e;
     }
 
-    static Result Ok(R r) {
-        Result result;
+    static Result2 Ok(R r) {
+        Result2 result;
         result.err = false;
         result.r = r;
         result.e = E();
         return result;
     }
 
-    static Result Err(E e) {
-        Result result;
+    static Result2 Err(E e) {
+        Result2 result;
         result.err = true;
         result.r = R();
         result.e = e;

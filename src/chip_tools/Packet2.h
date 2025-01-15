@@ -5,13 +5,13 @@
 #include <ctype.h>
 #include "string.h"
 
-bool parse_int_literal(const char *&cursor, int &out);
+bool _parse_int_literal(const char *&cursor, int &out);
 
-enum class ParseError {
+enum class ParseError2 {
     ERROR
 };
 
-struct Packet {
+struct Packet2 {
 
     void clear() {
         memset(buf, 0, sizeof(buf));
@@ -96,15 +96,15 @@ struct Packet {
     //----------------------------------------
     // Take standard C++-format integer from packet
 
-    Result<int, ParseError> take_int() {
+    Result2<int, ParseError2> take_int() {
         int out = 0;
         const char *temp = cursor2;
-        auto ok = parse_int_literal(temp, out);
+        auto ok = _parse_int_literal(temp, out);
         if (ok) {
             cursor2 = (char *) temp;
             return out;
         } else {
-            return ParseError::ERROR;
+            return ParseError2::ERROR;
         }
     }
 
@@ -168,7 +168,7 @@ struct Packet {
 
     //----------------------------------------
 
-    typedef Result<uint32_t, ParseError> Res;
+    typedef Result2<uint32_t, ParseError2> Res;
 
     Res take_hex2() {
         auto old_error = error;
@@ -177,7 +177,7 @@ struct Packet {
         if (error) {
             error = old_error;
             cursor2 = old_cursor;
-            return ParseError::ERROR;
+            return ParseError2::ERROR;
         } else {
             return out;
         }

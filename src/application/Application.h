@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Console.h"
+#include "shell/Console.h"
 
 #include "PicoSWIO.h"
 #include "RVDebug.h"
@@ -10,8 +10,6 @@
 
 class Application {
 public:
-    Console * console = nullptr;
-
     PicoSWIO *swio = nullptr;
     RVDebug *rvd = nullptr;
     WCHFlash *flash = nullptr;

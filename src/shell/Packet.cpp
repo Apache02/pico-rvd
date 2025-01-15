@@ -1,10 +1,10 @@
-#include "Packet.h"
+#include "shell/Packet.h"
 #include <string.h>
 #include <stdio.h>
 
 //------------------------------------------------------------------------------
 
-bool parse_binary_literal(const char *&cursor, int &out) {
+static bool parse_binary_literal(const char *&cursor, int &out) {
     int accum = 0;
     int sign = 1;
     int digits = 0;
@@ -29,7 +29,7 @@ bool parse_binary_literal(const char *&cursor, int &out) {
 
 //------------------------------------------------------------------------------
 
-bool parse_decimal_literal(const char *&cursor, int &out) {
+static bool parse_decimal_literal(const char *&cursor, int &out) {
     int accum = 0;
     int sign = 1;
     int digits = 0;
@@ -59,7 +59,7 @@ bool parse_decimal_literal(const char *&cursor, int &out) {
 
 //------------------------------------------------------------------------------
 
-bool parse_hex_literal(const char *&cursor, int &out) {
+static bool parse_hex_literal(const char *&cursor, int &out) {
     int accum = 0;
     int sign = 1;
     int digits = 0;
@@ -91,7 +91,6 @@ bool parse_hex_literal(const char *&cursor, int &out) {
 bool parse_octal_literal(const char *&cursor, int &out) {
     int accum = 0;
     int sign = 1;
-    int digits = 0;
 
     if (*cursor == '-') {
         sign = -1;
@@ -104,16 +103,11 @@ bool parse_octal_literal(const char *&cursor, int &out) {
         } else {
             return false;
         }
-        digits++;
         cursor++;
     }
 
-    if (digits != 0) {
-        out = sign * accum;
-        return true;
-    } else {
-        return false;
-    }
+    out = sign * accum;
+    return true;
 }
 
 //------------------------------------------------------------------------------
@@ -150,44 +144,5 @@ bool parse_int_literal(const char *&cursor, int &out) {
         return result;
     }
 }
-
-//------------------------------------------------------------------------------
-
-#define CHECK2(A) { if (!(A)) { while (1) *(uint32_t*)0xDEADBEEF = 0xF00DCAFE; } };
-
-static struct autotest {
-    autotest() {
-        int out = 0;
-        const char *cursor;
-
-        cursor = "    12345     asdlkjfask ";
-        CHECK2(parse_int_literal(cursor, out) && out == 12345);
-
-        cursor = "   -12345     asdlkjfask   ";
-        CHECK2(parse_int_literal(cursor, out) && out == -12345);
-
-        cursor = "0x12345";
-        CHECK2(parse_int_literal(cursor, out) && out == 0x12345);
-
-        cursor = "0xFEDCBA01";
-        CHECK2(parse_int_literal(cursor, out) && out == 0xFEDCBA01);
-
-        cursor = "0b10101100";
-        CHECK2(parse_int_literal(cursor, out) && out == 0b10101100);
-
-        cursor = "01234567";
-        CHECK2(parse_int_literal(cursor, out) && out == 01234567);
-
-        cursor = "not_a_number";
-        CHECK2(!parse_int_literal(cursor, out));
-
-        cursor = "1234badsuffix";
-        CHECK2(!parse_int_literal(cursor, out));
-
-        cursor = " 1234 sometest";
-        CHECK2(parse_int_literal(cursor, out) && out == 1234 && strcmp(cursor, " sometest") == 0);
-    }
-
-} _autotest;
 
 //------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils.h"
-#include "Packet.h"
+#include "Packet2.h"
 
 struct RVDebug;
 struct WCHFlash;
@@ -92,8 +92,8 @@ public:
     WCHFlash *flash = nullptr;
     SoftBreak *soft = nullptr;
 
-    Packet send;
-    Packet recv;
+    Packet2 send;
+    Packet2 recv;
 
     uint8_t *page_cache;
     int page_base = -1;

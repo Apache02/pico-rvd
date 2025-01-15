@@ -8,7 +8,7 @@
 #include "usb/usb_task.h"
 #include "usb/tusb_config.h"
 #include "usb/usb_itf.h"
-#include "console/console_task.h"
+#include "shell_task.h"
 #include "gdb/gdb_task.h"
 
 #include "Application.h"
@@ -58,8 +58,8 @@ int main() {
     );
 
     xTaskCreate(
-            vTaskConsole,
-            "console",
+            vTaskShell,
+            "shell",
             configMINIMAL_STACK_SIZE * 4,
             NULL,
             2,
